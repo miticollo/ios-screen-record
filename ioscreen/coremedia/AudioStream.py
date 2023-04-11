@@ -1,4 +1,4 @@
-## iOS AudioStreamBasicDescription
+# iOS AudioStreamBasicDescription
 import struct
 from _ctypes import Structure
 from ctypes import c_uint32, c_double
@@ -36,4 +36,3 @@ class AudioStreamBasicDescription(Structure):
                    BytesPerPacket=4, FramesPerPacket=1, BytesPerFrame=4, ChannelsPerFrame=2,
                    BitsPerChannel=16, Reserved=0,
                    SampleRate=48000.0, FormatID=AudioFormatIDLMagic)
-

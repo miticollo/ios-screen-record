@@ -1,7 +1,7 @@
 import enum
 import struct
 
-from .coremedia.AudioStream import AudioStreamBasicDescription, AudioFormatIDLMagic
+from .coremedia.AudioStream import AudioStreamBasicDescription
 from .coremedia.CMSampleBuffer import CMSampleBuffer
 from .coremedia.CMTime import CMTime
 from .coremedia.common import NSNumber

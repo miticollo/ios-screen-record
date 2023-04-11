@@ -2,7 +2,6 @@
 # https://github.com/phracker/MacOSX-SDKs/blob/master/MacOSX10.8.sdk/System/Library/Frameworks/CoreMedia.framework/Versions/A/Headers/CMTime.h
 
 import enum
-import struct
 from _ctypes import Structure
 from ctypes import c_uint32, c_uint64
 

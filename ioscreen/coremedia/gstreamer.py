@@ -1,20 +1,22 @@
-from time import sleep
 import logging
 import struct
+from time import sleep
+
+import gi
+
 from .CMFormatDescription import DescriptorConst
 from .CMSampleBuffer import CMSampleBuffer
 from .wav import get_wav_header
-import gi
+
 gi.require_version('Gst', '1.0')
 gi.require_version('GstBase', '1.0')
 gi.require_version('GstAudio', '1.0')
 gi.require_version('GstVideo', '1.0')
 
 from .consumer import startCode, Consumer
-from gi.repository import Gst, GObject, GLib
+from gi.repository import Gst, GLib
 
 GST_PLUGIN_PATH = '/usr/local/lib/gstreamer-1.0'
-
 
 
 def setup_live_playAudio(pipe):
@@ -46,7 +48,6 @@ def setup_video_pipeline(pipe):
     pipe.add(videoconvert)
     pipe.add(queue3)
     pipe.add(sink)
-
 
     src.link(queue1)
     queue1.link(h264parse)
@@ -82,7 +83,7 @@ def setup_audio_pipeline(pipe):
     return src
 
 
-def run_main_loop(pipeline,stopSignal):
+def run_main_loop(pipeline, stopSignal):
     def bus_call(bus, message, loop):
         if stopSignal.isSet():
             loop.quit()
@@ -98,12 +99,12 @@ def run_main_loop(pipeline,stopSignal):
             sleep(2)
             loop.quit()
         return True
+
     loop = GLib.MainLoop()
     bus = pipeline.get_bus()
     bus.add_signal_watch()
     bus.connect("message", bus_call, loop)
     return loop
-
 
 
 class GstAdapter(Consumer):
@@ -112,7 +113,7 @@ class GstAdapter(Consumer):
     MP3 = "mp3"
     OGG = "ogg"
 
-    def __init__(self, videoAppSrc, audioAppSrc, firstAudioSample, loop=None, pipeline=None,stopSignal=None):
+    def __init__(self, videoAppSrc, audioAppSrc, firstAudioSample, loop=None, pipeline=None, stopSignal=None):
         self.videoAppSrc = videoAppSrc
         self.audioAppSrc = audioAppSrc
         self.firstAudioSample = firstAudioSample
@@ -140,7 +141,7 @@ class GstAdapter(Consumer):
         audioAppSrc = setup_audio_pipeline(pipe)
         setup_live_playAudio(pipe)
         pipe.set_state(Gst.State.PLAYING)
-        loop = run_main_loop(pipe,stopSignal)
+        loop = run_main_loop(pipe, stopSignal)
         # _thread.start_new_thread(run_main_loop, (pipe,))
         logging.info("Gstreamer is running!")
         return cls(videoAppSrc, audioAppSrc, True, loop)
