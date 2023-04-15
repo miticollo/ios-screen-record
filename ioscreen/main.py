@@ -5,7 +5,7 @@ from ioscreen.util import *
 
 
 def cmd_record_wav(args: argparse.Namespace):
-    device = find_ios_device(args.udid.replace('-', ''))
+    device = find_ios_device(args.udid)
     consumer = AVFileWriter(h264FilePath=args.h264File, wavFilePath=args.wavFile)
     stopSignal = threading.Event()
     register_signal(stopSignal)
@@ -13,7 +13,7 @@ def cmd_record_wav(args: argparse.Namespace):
 
 
 def cmd_record_udp(args: argparse.Namespace):
-    device = find_ios_device(args.udid.replace('-', ''))
+    device = find_ios_device(args.udid)
     consumer = SocketUDP()
     stopSignal = threading.Event()
     register_signal(stopSignal)
@@ -22,7 +22,7 @@ def cmd_record_udp(args: argparse.Namespace):
 
 def cmd_record_gstreamer(args: argparse.Namespace):
     from ioscreen.coremedia.gstreamer import GstAdapter
-    device = find_ios_device(args.udid.replace('-', ''))
+    device = find_ios_device(args.udid)
     stopSignal = threading.Event()
     register_signal(stopSignal)
     consumer = GstAdapter.new(stopSignal)
@@ -53,6 +53,8 @@ def main():
     if not args.subparser:
         parser.print_help()
         return
+    if args.udid is not None:
+        args.udid.replace('-', '')
     args.func(args)
 
 

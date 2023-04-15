@@ -63,7 +63,7 @@ def find_ios_device(udid=None):
     return _device
 
 
-def enable_qt_config(device,stopSignal):
+def enable_qt_config(device, stopSignal):
     """ 开启 qt 配置选项
     :param device:
     :return:
@@ -146,12 +146,12 @@ def record_gstreamer(device):
     consumer.loop.run()
 
 
-def start_reading(consumer:Consumer, device:Device, stopSignal: threading.Event = None):
+def start_reading(consumer: Consumer, device: Device, stopSignal: threading.Event = None):
     stopSignal = stopSignal or threading.Event()
     disable_qt_config(device)
     device.set_configuration()
     logging.info("enable_qt_config..")
-    device = enable_qt_config(device,stopSignal)
+    device = enable_qt_config(device, stopSignal)
     config_index = 0
     qt_config = None
     for i in range(device.bNumConfigurations):
