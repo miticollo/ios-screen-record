@@ -12,9 +12,10 @@ gi.require_version('Gst', '1.0')
 gi.require_version('GstBase', '1.0')
 gi.require_version('GstAudio', '1.0')
 gi.require_version('GstVideo', '1.0')
+gi.require_version('Gtk', '3.0')
 
 from .consumer import startCode, Consumer
-from gi.repository import Gst, GLib
+from gi.repository import Gst, GLib, Gtk
 
 GST_PLUGIN_PATH = '/usr/local/lib/gstreamer-1.0'
 
@@ -37,7 +38,8 @@ def setup_video_pipeline(pipe):
     videoconvert = Gst.ElementFactory.make("videoconvert", "video_convert")
 
     queue3 = Gst.ElementFactory.make("queue", "queue_av")
-    sink = Gst.ElementFactory.make("autovideosink", "av_sink")
+    sink = Gst.ElementFactory.make("gtksink", "av_sink")
+    sink.get_property("widget").set_size_request(1334, 750)  # desired width and height
     sink.set_property("sync", False)
 
     pipe.add(src)
