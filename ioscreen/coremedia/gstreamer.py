@@ -39,8 +39,10 @@ def setup_video_pipeline(pipe):
 
     queue3 = Gst.ElementFactory.make("queue", "queue_av")
     sink = Gst.ElementFactory.make("gtksink", "av_sink")
-    sink.get_property("widget").set_size_request(1334, 750)  # desired width and height
     sink.set_property("sync", False)
+
+    sink_widget: Gtk.Widget = sink.get_property("widget")
+    sink_widget.set_size_request(450, 972)
 
     pipe.add(src)
     pipe.add(queue1)
@@ -138,7 +140,7 @@ class GstAdapter(Consumer):
             logging.warning("Gstreamer plugin not loaded... scan for %s", GST_PLUGIN_PATH)
             registry.scan_path(GST_PLUGIN_PATH)
 
-        pipe = Gst.Pipeline.new("QT_Hack_Pipeline")
+        pipe: Gst.Pipeline = Gst.Pipeline.new("QT_Hack_Pipeline")
         videoAppSrc = setup_video_pipeline(pipe)
         audioAppSrc = setup_audio_pipeline(pipe)
         setup_live_playAudio(pipe)

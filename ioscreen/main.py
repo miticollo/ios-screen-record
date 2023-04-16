@@ -54,7 +54,7 @@ def main():
         parser.print_help()
         return
     if args.udid is not None:
-        args.udid.replace('-', '')
+        args.udid = args.udid.replace('-', '')
     args.func(args)
 
 
