@@ -6,10 +6,12 @@ import struct
 import sys
 import threading
 from time import sleep, time
+
 import usb
-from usb.core import Configuration, Device
+from usb.core import Device
 
 from .coremedia.consumer import AVFileWriter, SocketUDP, Consumer
+from .iphone_models import iPhoneModels
 from .meaasge import MessageProcessor
 
 logging.basicConfig(level=logging.INFO,
@@ -64,6 +66,12 @@ def find_ios_device(udid=None):
     return _device
 
 
+def get_device_info(device: usb.Device):
+    identifier: str = f"iPhone{hex(device.bcdDevice >> 8)[2:]},{hex(device.bcdDevice)[-1]}"
+    udid: str = str(device.serial_number).rstrip('\x00')
+    return f'{iPhoneModels.get_model(identifier)} ({udid})', iPhoneModels.get_width(identifier)
+
+
 def enable_qt_config(device, stopSignal):
     """ 开启 qt 配置选项
     :param device:
@@ -71,6 +79,7 @@ def enable_qt_config(device, stopSignal):
     """
     logging.info('Enabling hidden QT config')
     val = device.ctrl_transfer(0x40, 0x52, 0, 2, b'')
+    sleep(.7)
     if val:
         raise Exception(f'Enable QTConfig Error {val} ')
     for _ in range(5):
@@ -142,7 +151,8 @@ def record_gstreamer(device):
     from .coremedia.gstreamer import GstAdapter
     stopSignal = threading.Event()
     register_signal(stopSignal)
-    consumer = GstAdapter.new(stopSignal)
+    model, width = get_device_info(device)
+    consumer = GstAdapter.new(stopSignal, model, width)
     _thread.start_new_thread(start_reading, (consumer, device, stopSignal,))
     consumer.loop.run()
 
@@ -153,15 +163,12 @@ def start_reading(consumer: Consumer, device: Device, stopSignal: threading.Even
     device.set_configuration()
     logging.info("enable_qt_config..")
     device = enable_qt_config(device, stopSignal)
-    config_index = 0
     qt_config = None
-    for i in range(device.bNumConfigurations):
-        _config = Configuration(device, i)
+    for _config in device.configurations():
         qt_config = usb.util.find_descriptor(_config, bInterfaceSubClass=0x2A)
         if qt_config:
-            config_index = i + 1
+            device.set_configuration(_config.bConfigurationValue)
             break
-    device.set_configuration(config_index)
     device.ctrl_transfer(0x02, 0x01, 0, 0x86, b'')
     device.ctrl_transfer(0x02, 0x01, 0, 0x05, b'')
     if not qt_config:

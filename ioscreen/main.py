@@ -1,7 +1,6 @@
 import _thread
 import argparse
 
-from ioscreen.iphone_models import iPhoneModels
 from ioscreen.util import *
 
 
@@ -19,12 +18,6 @@ def cmd_record_udp(args: argparse.Namespace):
     stopSignal = threading.Event()
     register_signal(stopSignal)
     start_reading(consumer, device, stopSignal)
-
-
-def get_device_info(device: usb.Device):
-    identifier: str = f"iPhone{hex(device.bcdDevice >> 8)[2:]},{hex(device.bcdDevice)[-1]}"
-    udid: str = str(device.serial_number).rstrip('\x00')
-    return f'{iPhoneModels.get_model(identifier)} ({udid})', iPhoneModels.get_width(identifier)
 
 
 def cmd_record_gstreamer(args: argparse.Namespace):

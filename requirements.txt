@@ -1,4 +1,4 @@
 PyGObject
 PyGObject-stubs
-pyusb==1.1.1
+pyusb
 

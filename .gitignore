@@ -363,3 +363,5 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/virtualenv,pycharm+all,python,windows,linux,macos,git
+/AUTHORS
+/ChangeLog

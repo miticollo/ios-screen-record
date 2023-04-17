@@ -16,7 +16,7 @@ gi.require_version('GstVideo', '1.0')
 gi.require_version('Gtk', '3.0')
 
 from .consumer import startCode, Consumer
-from gi.repository import Gst, GLib, Gtk
+from gi.repository import Gst, Gtk
 
 GST_PLUGIN_PATH = '/usr/local/lib/gstreamer-1.0'
 
@@ -96,10 +96,14 @@ class VideoPlayer(Gtk.Window):
         Gtk.Window.__init__(self, title=title)
 
         # Set up the window
-        self.set_default_size(width, 972)
+        self.set_resizable(False)
+        self.set_default_size(width, 942)
         self.connect("destroy", self.on_destroy)
 
-        self.add(self.sink)
+        scrolled_window = Gtk.ScrolledWindow()
+        scrolled_window.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.NEVER)
+        scrolled_window.add(self.sink)
+        self.add(scrolled_window)
 
         # Set the pipeline to play
         self.pipe.set_state(Gst.State.PLAYING)
