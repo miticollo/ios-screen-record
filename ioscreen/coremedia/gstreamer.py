@@ -1,5 +1,6 @@
 import logging
 import struct
+import threading
 from time import sleep
 
 import gi
@@ -42,7 +43,6 @@ def setup_video_pipeline(pipe):
     sink.set_property("sync", False)
 
     sink_widget: Gtk.Widget = sink.get_property("widget")
-    sink_widget.set_size_request(450, 972)
 
     pipe.add(src)
     pipe.add(queue1)
@@ -60,7 +60,7 @@ def setup_video_pipeline(pipe):
     queue2.link(videoconvert)
     videoconvert.link(queue3)
     queue3.link(sink)
-    return src
+    return src, sink_widget
 
 
 def setup_audio_pipeline(pipe):
@@ -87,28 +87,57 @@ def setup_audio_pipeline(pipe):
     return src
 
 
-def run_main_loop(pipeline, stopSignal):
-    def bus_call(bus, message, loop):
-        if stopSignal.isSet():
-            loop.quit()
+class VideoPlayer(Gtk.Window):
+    def __init__(self, pipe: Gst.Pipeline, sink: Gtk.Widget, stop_signal: threading.Event, title: str, width: int):
+        Gtk.init()
+        self.pipe: Gst.Pipeline = pipe
+        self.sink: Gtk.Widget = sink
+        self.stop_signal: threading.Event = stop_signal
+        Gtk.Window.__init__(self, title=title)
+
+        # Set up the window
+        self.set_default_size(width, 972)
+        self.connect("destroy", self.on_destroy)
+
+        self.add(self.sink)
+
+        # Set the pipeline to play
+        self.pipe.set_state(Gst.State.PLAYING)
+
+        # Create a bus and connect it to the message signal
+        self.bus: Gst.Bus = self.pipe.get_bus()
+        self.bus.add_signal_watch()
+        self.bus.connect("message", self.on_message)
+
+    def on_destroy(self, widget):
+        self.sink = None
+        av_sink = self.pipe.get_by_name("av_sink")
+        av_sink.set_state(Gst.State.NULL)
+        self.stop_signal.set()
+
+    def on_message(self, bus, message):
+        if self.stop_signal.is_set():
+            self.pipe.set_state(Gst.State.NULL)
+            Gtk.main_quit()
+        # Handle error messages
         t = message.type
-        Gst.debug_bin_to_dot_file_with_ts(pipeline, Gst.DebugGraphDetails.ALL, "test")
-        if t == Gst.MessageType.EOS:
-            logging.info("End-of-stream")
-            loop.quit()
-        elif t == Gst.MessageType.ERROR:
+        Gst.debug_bin_to_dot_file_with_ts(self.pipe, Gst.DebugGraphDetails.ALL, "test")
+        if t == Gst.MessageType.ERROR:
             err, debug = message.parse_error()
             logging.error(f" {err}: {debug}")
-            stopSignal.set()
+            self.stop_signal.set()
             sleep(2)
-            loop.quit()
-        return True
+            self.pipe.set_state(Gst.State.NULL)
+            Gtk.main_quit()
+        elif t == Gst.MessageType.EOS:
+            logging.info("End-of-stream")
+            self.pipe.set_state(Gst.State.NULL)
+            Gtk.main_quit()
 
-    loop = GLib.MainLoop()
-    bus = pipeline.get_bus()
-    bus.add_signal_watch()
-    bus.connect("message", bus_call, loop)
-    return loop
+    def run(self):
+        # Show the window and start the main loop
+        self.show_all()
+        Gtk.main()
 
 
 class GstAdapter(Consumer):
@@ -126,7 +155,7 @@ class GstAdapter(Consumer):
         self.stopSignal = stopSignal
 
     @classmethod
-    def new(cls, stopSignal):
+    def new(cls, stopSignal, title: str, width: int):
         Gst.init(None)
         logging.info("Starting Gstreamer..")
 
@@ -141,11 +170,10 @@ class GstAdapter(Consumer):
             registry.scan_path(GST_PLUGIN_PATH)
 
         pipe: Gst.Pipeline = Gst.Pipeline.new("QT_Hack_Pipeline")
-        videoAppSrc = setup_video_pipeline(pipe)
+        (videoAppSrc, sink) = setup_video_pipeline(pipe)
         audioAppSrc = setup_audio_pipeline(pipe)
         setup_live_playAudio(pipe)
-        pipe.set_state(Gst.State.PLAYING)
-        loop = run_main_loop(pipe, stopSignal)
+        loop = VideoPlayer(pipe, sink, stopSignal, title, width)
         # _thread.start_new_thread(run_main_loop, (pipe,))
         logging.info("Gstreamer is running!")
         return cls(videoAppSrc, audioAppSrc, True, loop)

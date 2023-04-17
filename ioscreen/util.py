@@ -57,6 +57,7 @@ def find_ios_device(udid=None):
             if udid in device.serial_number:
                 logging.info(f'Find Device UDID: {device.serial_number}')
                 _device = device
+                break
     if not _device:
         raise Exception(f'not find {udid}')
 

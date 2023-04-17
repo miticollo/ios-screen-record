@@ -1,6 +1,7 @@
 import _thread
 import argparse
 
+from ioscreen.iphone_models import iPhoneModels
 from ioscreen.util import *
 
 
@@ -20,12 +21,19 @@ def cmd_record_udp(args: argparse.Namespace):
     start_reading(consumer, device, stopSignal)
 
 
+def get_device_info(device: usb.Device):
+    identifier: str = f"iPhone{hex(device.bcdDevice >> 8)[2:]},{hex(device.bcdDevice)[-1]}"
+    udid: str = str(device.serial_number).rstrip('\x00')
+    return f'{iPhoneModels.get_model(identifier)} ({udid})', iPhoneModels.get_width(identifier)
+
+
 def cmd_record_gstreamer(args: argparse.Namespace):
     from ioscreen.coremedia.gstreamer import GstAdapter
-    device = find_ios_device(args.udid)
+    device: usb.Device = find_ios_device(args.udid)
     stopSignal = threading.Event()
     register_signal(stopSignal)
-    consumer = GstAdapter.new(stopSignal)
+    model, width = get_device_info(device)
+    consumer = GstAdapter.new(stopSignal, model, width)
     _thread.start_new_thread(start_reading, (consumer, device, stopSignal,))
     consumer.loop.run()
 
@@ -35,7 +43,7 @@ def main():
     subparsers = parser.add_subparsers(dest='subparser')
     parser.add_argument("-u", "--udid", help="specify unique device identifier")
     gstreamer_parser = subparsers.add_parser("gstreamer",
-                                              help="record will open a new window and push AV data to gstreamer.")
+                                             help="record will open a new window and push AV data to gstreamer.")
     gstreamer_parser.set_defaults(func=cmd_record_gstreamer)
 
     udp_parser = subparsers.add_parser("udp",
