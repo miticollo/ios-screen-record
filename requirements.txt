@@ -1,4 +1,4 @@
 PyGObject
 PyGObject-stubs
 pyusb
-
+libusb-package

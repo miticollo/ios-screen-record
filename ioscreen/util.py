@@ -7,6 +7,7 @@ import sys
 import threading
 from time import sleep, time
 
+import libusb_package
 import usb
 from usb.core import Device
 
@@ -14,7 +15,7 @@ from .coremedia.consumer import AVFileWriter, SocketUDP, Consumer
 from .iphone_models import iPhoneModels
 from .meaasge import MessageProcessor
 
-logging.basicConfig(level=logging.INFO,
+logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
 
 
@@ -46,7 +47,7 @@ def find_ios_device(udid=None):
                     return True
             return False
 
-    devices = usb.core.find(find_all=True, custom_match=find_class(0xfe))
+    devices = libusb_package.find(find_all=True, custom_match=find_class(0xfe))
     _device = None
     if not udid:
         try:
