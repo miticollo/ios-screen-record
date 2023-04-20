@@ -15,9 +15,6 @@ from .coremedia.consumer import AVFileWriter, SocketUDP, Consumer
 from .iphone_models import iPhoneModels
 from .meaasge import MessageProcessor
 
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
-
 
 class iOSDevice:
     def __init__(self, SerialNumber, ProductName, UsbMuxConfigInde, QTConfigIndex, VID, PID, UsbInfo):
@@ -156,6 +153,10 @@ def record_gstreamer(device):
     consumer = GstAdapter.new(stopSignal, model, width)
     _thread.start_new_thread(start_reading, (consumer, device, stopSignal,))
     consumer.loop.run()
+
+
+def set_logging_level(level: int):
+    logging.basicConfig(level=level, format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
 
 
 def start_reading(consumer: Consumer, device: Device, stopSignal: threading.Event = None):

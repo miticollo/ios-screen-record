@@ -22,6 +22,10 @@ def cmd_record_udp(args: argparse.Namespace):
 
 def cmd_record_gstreamer(args: argparse.Namespace):
     from ioscreen.coremedia.gstreamer import GstAdapter
+    if args.verbose:
+        set_logging_level(logging.DEBUG)
+    else:
+        set_logging_level(logging.INFO)
     device: usb.Device = find_ios_device(args.udid)
     stopSignal = threading.Event()
     register_signal(stopSignal)
@@ -35,6 +39,7 @@ def main():
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest='subparser')
     parser.add_argument("-u", "--udid", help="specify unique device identifier")
+    parser.add_argument('-v', '--verbose', action='store_true', default=False)
     gstreamer_parser = subparsers.add_parser("gstreamer",
                                              help="record will open a new window and push AV data to gstreamer.")
     gstreamer_parser.set_defaults(func=cmd_record_gstreamer)
