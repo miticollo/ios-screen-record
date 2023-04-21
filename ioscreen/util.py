@@ -1,6 +1,7 @@
 import _thread
 import array
 import logging
+import multiprocessing
 import signal
 import struct
 import sys
@@ -145,13 +146,13 @@ def record_udp(device, audio_only=False):
     start_reading(consumer, device, stopSignal)
 
 
-def record_gstreamer(device):
+def record_gstreamer(device, event: multiprocessing.Event):
     from .coremedia.gstreamer import GstAdapter
     stopSignal = threading.Event()
     register_signal(stopSignal)
     model, width = get_device_info(device)
     consumer = GstAdapter.new(stopSignal, model, width)
-    _thread.start_new_thread(start_reading, (consumer, device, stopSignal,))
+    _thread.start_new_thread(start_reading, (consumer, device, stopSignal, event,))
     consumer.loop.run()
 
 
@@ -159,7 +160,7 @@ def set_logging_level(level: int):
     logging.basicConfig(level=level, format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
 
 
-def start_reading(consumer: Consumer, device: Device, stopSignal: threading.Event = None):
+def start_reading(consumer: Consumer, device: Device, stopSignal: threading.Event = None, event: multiprocessing.Event = None):
     stopSignal = stopSignal or threading.Event()
     disable_qt_config(device)
     device.set_configuration()
@@ -212,7 +213,7 @@ def start_reading(consumer: Consumer, device: Device, stopSignal: threading.Even
             lengthBuffer = byteStream.get(4)
             _length = struct.unpack('<I', lengthBuffer)[0] - 4
             buffer = byteStream.get(_length)
-            message.receive_data(buffer)
+            message.receive_data(buffer, event)
 
     _thread.start_new_thread(writeStream, ())
     _thread.start_new_thread(readStream, ())

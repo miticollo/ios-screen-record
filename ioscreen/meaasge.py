@@ -1,4 +1,5 @@
 import logging
+import multiprocessing
 import struct
 import threading
 
@@ -151,13 +152,15 @@ class MessageProcessor:
             logging.debug(Packet)
             self.releaseWaiter.set()
 
-    def receive_data(self, buffer):
+    def receive_data(self, buffer, event: multiprocessing.Event = None):
         code = struct.unpack('<I', buffer[:4])[0]
         if code == PingConst.PingPacketMagic:
             logging.info("AudioVideo-Stream has start success")
             self.usbWrite(new_ping_packet_bytes())
         elif code == SyncConst.SyncPacketMagic:
             self.handleSyncPacket(buffer)
+            if event is not None and not event.is_set():
+                event.set()
         elif code == AyncConst.AsyncPacketMagic:
             self.handleAsyncPacket(buffer)
         else:
