@@ -14,6 +14,8 @@ from .wav import set_wav_header
 
 startCode = b'\x00\x00\x00\x01'
 
+logger = logging.getLogger("ioscreen")
+
 
 class Consumer:
     def consume(self, data: CMSampleBuffer):
@@ -89,7 +91,7 @@ class SocketUDP(Consumer):
         self.socket_udp.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         self.broadcast = broadcast or ('127.0.0.1', 8880)
         self.audioOnly = audioOnly
-        logging.info(f'listen UDP: udp/h264://{self.broadcast[0]}:{self.broadcast[1]}')
+        logger.info(f'listen UDP: udp/h264://{self.broadcast[0]}:{self.broadcast[1]}')
 
     def consume(self, data: CMSampleBuffer):
         if data.MediaType == DescriptorConst.MediaTypeSound:
@@ -122,4 +124,3 @@ class SocketUDP(Consumer):
 
     def stop(self):
         self.socket_udp.close()
-

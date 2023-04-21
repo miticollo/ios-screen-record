@@ -16,6 +16,8 @@ from .coremedia.consumer import AVFileWriter, SocketUDP, Consumer
 from .iphone_models import iPhoneModels
 from .meaasge import MessageProcessor
 
+logger = logging.getLogger("ioscreen")
+
 
 class iOSDevice:
     def __init__(self, SerialNumber, ProductName, UsbMuxConfigInde, QTConfigIndex, VID, PID, UsbInfo):
@@ -51,12 +53,12 @@ def find_ios_device(udid=None):
         try:
             _device = next(devices)
         except StopIteration:
-            logging.warning('未找到 iOS 连接设备')
+            logger.warning('未找到 iOS 连接设备')
             sys.exit()
     else:
         for device in devices:
             if udid in device.serial_number:
-                logging.info(f'Find Device UDID: {device.serial_number}')
+                logger.info(f'Find Device UDID: {device.serial_number}')
                 _device = device
                 break
     if not _device:
@@ -76,7 +78,7 @@ def enable_qt_config(device, stopSignal):
     :param device:
     :return:
     """
-    logging.info('Enabling hidden QT config')
+    logger.info('Enabling hidden QT config')
     val = device.ctrl_transfer(0x40, 0x52, 0, 2, b'')
     sleep(.7)
     if val:
@@ -86,7 +88,7 @@ def enable_qt_config(device, stopSignal):
             device = find_ios_device(device.serial_number)
             break
         except Exception as E:
-            logging.error(E)
+            logger.error(E)
     else:
         stopSignal.set()
     return device
@@ -97,10 +99,10 @@ def disable_qt_config(device):
     :param device:
     :return:
     """
-    logging.info('Disabling hidden QT config')
+    logger.info('Disabling hidden QT config')
     val = device.ctrl_transfer(0x40, 0x52, 0, 0, b'')
     if val:
-        logging.warning('Failed sending control transfer for enabling hidden QT config')
+        logger.warning('Failed sending control transfer for enabling hidden QT config')
 
 
 class ByteStream:
@@ -156,15 +158,22 @@ def record_gstreamer(device, event: multiprocessing.Event):
     consumer.loop.run()
 
 
-def set_logging_level(level: int):
-    logging.basicConfig(level=level, format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
+def init_logger(verbosity: bool):
+    ch = logging.StreamHandler()
+    ch.setFormatter(logging.Formatter('%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s'))
+    logger.addHandler(ch)
+    if verbosity:
+        logger.setLevel(logging.DEBUG)
+    else:
+        logger.setLevel(logging.INFO)
 
 
-def start_reading(consumer: Consumer, device: Device, stopSignal: threading.Event = None, event: multiprocessing.Event = None):
+def start_reading(consumer: Consumer, device: Device, stopSignal: threading.Event = None,
+                  event: multiprocessing.Event = None):
     stopSignal = stopSignal or threading.Event()
     disable_qt_config(device)
     device.set_configuration()
-    logging.info("enable_qt_config..")
+    logger.info("enable_qt_config..")
     device = enable_qt_config(device, stopSignal)
     qt_config = None
     for _config in device.configurations():
@@ -184,7 +193,7 @@ def start_reading(consumer: Consumer, device: Device, stopSignal: threading.Even
             outEndpoint = i  # 出口端点
     if not inEndpoint or not outEndpoint:
         raise Exception('could not get InEndpoint or outEndpoint')
-    logging.info("USB connection ready, waiting for ping..")
+    logger.info("USB connection ready, waiting for ping..")
 
     message = MessageProcessor(device, inEndpoint=inEndpoint, outEndpoint=outEndpoint, stopSignal=stopSignal,
                                cmSampleBufConsumer=consumer)
@@ -199,7 +208,7 @@ def start_reading(consumer: Consumer, device: Device, stopSignal: threading.Even
                 data = device.read(inEndpoint, 1024 * 1024, 3000)
                 byteStream.put(data)
             except Exception as E:
-                logging.warning(E)
+                logger.warning(E)
                 message.outEndpoint = None
                 message.inEndpoint = None
                 stopSignal.set()

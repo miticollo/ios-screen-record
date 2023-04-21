@@ -22,10 +22,7 @@ def cmd_record_udp(args: argparse.Namespace):
 
 def cmd_record_gstreamer(args: argparse.Namespace):
     from ioscreen.coremedia.gstreamer import GstAdapter
-    if args.verbose:
-        set_logging_level(logging.DEBUG)
-    else:
-        set_logging_level(logging.INFO)
+    init_logger(args.verbose)
     device: usb.Device = find_ios_device(args.udid)
     stopSignal = threading.Event()
     register_signal(stopSignal)

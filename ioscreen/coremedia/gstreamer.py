@@ -18,6 +18,8 @@ gi.require_version('Gtk', '3.0')
 from .consumer import startCode, Consumer
 from gi.repository import Gst, Gtk
 
+logger = logging.getLogger("ioscreen")
+
 GST_PLUGIN_PATH = '/usr/local/lib/gstreamer-1.0'
 
 
@@ -128,13 +130,13 @@ class VideoPlayer(Gtk.Window):
         Gst.debug_bin_to_dot_file_with_ts(self.pipe, Gst.DebugGraphDetails.ALL, "test")
         if t == Gst.MessageType.ERROR:
             err, debug = message.parse_error()
-            logging.error(f" {err}: {debug}")
+            logger.error(f" {err}: {debug}")
             self.stop_signal.set()
             sleep(2)
             self.pipe.set_state(Gst.State.NULL)
             Gtk.main_quit()
         elif t == Gst.MessageType.EOS:
-            logging.info("End-of-stream")
+            logger.info("End-of-stream")
             self.pipe.set_state(Gst.State.NULL)
             Gtk.main_quit()
 
@@ -161,7 +163,7 @@ class GstAdapter(Consumer):
     @classmethod
     def new(cls, stopSignal, title: str, width: int):
         Gst.init(None)
-        logging.info("Starting Gstreamer..")
+        logger.info("Starting Gstreamer..")
 
         # fix Gst plugin path issue in brew:
         # https://gstreamer.freedesktop.org/documentation/gstreamer/gstregistry.html?gi-language=python#GstRegistry
@@ -170,7 +172,7 @@ class GstAdapter(Consumer):
         # and installed plugins in /usr/local/lib/gstreamer-1.0
         registry = Gst.Registry.get()
         if not registry.find_plugin('app'):
-            logging.warning("Gstreamer plugin not loaded... scan for %s", GST_PLUGIN_PATH)
+            logger.warning("Gstreamer plugin not loaded... scan for %s", GST_PLUGIN_PATH)
             registry.scan_path(GST_PLUGIN_PATH)
 
         pipe: Gst.Pipeline = Gst.Pipeline.new("QT_Hack_Pipeline")
@@ -179,7 +181,7 @@ class GstAdapter(Consumer):
         setup_live_playAudio(pipe)
         loop = VideoPlayer(pipe, sink, stopSignal, title, width)
         # _thread.start_new_thread(run_main_loop, (pipe,))
-        logging.info("Gstreamer is running!")
+        logger.info("Gstreamer is running!")
         return cls(videoAppSrc, audioAppSrc, True, loop)
 
     def consume(self, data: CMSampleBuffer):
