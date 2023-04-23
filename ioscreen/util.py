@@ -80,7 +80,7 @@ def enable_qt_config(device, stopSignal):
     """
     logger.info('Enabling hidden QT config')
     val = device.ctrl_transfer(0x40, 0x52, 0, 2, b'')
-    sleep(.7)
+    sleep(1)
     if val:
         raise Exception(f'Enable QTConfig Error {val} ')
     for _ in range(5):
@@ -161,6 +161,7 @@ def record_gstreamer(device, event: multiprocessing.Event):
 def init_logger(verbosity: bool):
     ch = logging.StreamHandler()
     ch.setFormatter(logging.Formatter('%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s'))
+    logging.root.handlers.clear()
     logger.addHandler(ch)
     if verbosity:
         logger.setLevel(logging.DEBUG)
