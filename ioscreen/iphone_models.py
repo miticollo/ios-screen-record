@@ -3,10 +3,10 @@ class iPhoneModels:
         'iPhone1,1': {'model': 'iPhone', 'width': 547},
         'iPhone1,2': {'model': 'iPhone 3G', 'width': 547},
         'iPhone10,1': {'model': 'iPhone 8 (CDMA)', 'width': 529},                       # 4,7"
-        'iPhone10,2': {'model': 'iPhone 8 Plus (CDMA)', 'width': 547},
+        'iPhone10,2': {'model': 'iPhone 8 Plus (CDMA)', 'width': 529},                  # 5,5"
         'iPhone10,3': {'model': 'iPhone X (CDMA)', 'width': 435},                       # 5,8"
         'iPhone10,4': {'model': 'iPhone 8 (GSM)', 'width': 529},                        # 4,7"
-        'iPhone10,5': {'model': 'iPhone 8 Plus (GSM)', 'width': 547},
+        'iPhone10,5': {'model': 'iPhone 8 Plus (GSM)', 'width': 529},                   # 5,5"
         'iPhone10,6': {'model': 'iPhone X (GSM)', 'width': 435},                        # 5,8"
         'iPhone11,2': {'model': 'iPhone XS', 'width': 435},                             # 5,8"
         'iPhone11,4': {'model': 'iPhone XS Max (China mainland)', 'width': 547},
@@ -40,15 +40,15 @@ class iPhoneModels:
         'iPhone5,4': {'model': 'iPhone 5c (CDMA)', 'width': 547},
         'iPhone6,1': {'model': 'iPhone 5s (GSM)', 'width': 547},
         'iPhone6,2': {'model': 'iPhone 5s (CDMA)', 'width': 547},
-        'iPhone7,1': {'model': 'iPhone 6 Plus', 'width': 547},
+        'iPhone7,1': {'model': 'iPhone 6 Plus', 'width': 529},                          # 5,5"
         'iPhone7,2': {'model': 'iPhone 6', 'width': 529},                               # 4,7"
         'iPhone8,1': {'model': 'iPhone 6s', 'width': 529},                              # 4,7"
-        'iPhone8,2': {'model': 'iPhone 6s Plus', 'width': 547},
+        'iPhone8,2': {'model': 'iPhone 6s Plus', 'width': 529},                         # 5,5"
         'iPhone8,4': {'model': 'iPhone SE (1st generation)', 'width': 547},
         'iPhone9,1': {'model': 'iPhone 7 (CDMA)', 'width': 529},                        # 4,7"
-        'iPhone9,2': {'model': 'iPhone 7 Plus (CDMA)', 'width': 547},
+        'iPhone9,2': {'model': 'iPhone 7 Plus (CDMA)', 'width': 529},                   # 5,5"
         'iPhone9,3': {'model': 'iPhone 7 (GSM)', 'width': 529},                         # 4,7"
-        'iPhone9,4': {'model': 'iPhone 7 Plus (GSM)', 'width': 547},
+        'iPhone9,4': {'model': 'iPhone 7 Plus (GSM)', 'width': 529},                    # 5,5"
     }
 
     @staticmethod
