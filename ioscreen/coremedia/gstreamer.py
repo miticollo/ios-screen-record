@@ -35,7 +35,8 @@ def setup_video_pipeline(pipe):
     src.set_property("is-live", True)
     queue1 = Gst.ElementFactory.make("queue", "queue_h264parse")
     h264parse = Gst.ElementFactory.make("h264parse", "h264_parse")
-    avdecH264 = Gst.ElementFactory.make("vtdec", "vt_dec")
+    # avdecH264 = Gst.ElementFactory.make("vtdec", "vt_dec")
+    avdecH264 = Gst.ElementFactory.make("avdec_h264", "video-decoder")
 
     queue2 = Gst.ElementFactory.make("queue", "queue_video_convert")
     videoconvert = Gst.ElementFactory.make("videoconvert", "video_convert")
