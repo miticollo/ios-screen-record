@@ -9,12 +9,12 @@ class iPhoneModels:
         'iPhone10,5': {'model': 'iPhone 8 Plus (GSM)', 'width': 529},                   # 5,5"
         'iPhone10,6': {'model': 'iPhone X (GSM)', 'width': 435},                        # 5,8"
         'iPhone11,2': {'model': 'iPhone XS', 'width': 435},                             # 5,8"
-        'iPhone11,4': {'model': 'iPhone XS Max (China mainland)', 'width': 547},
-        'iPhone11,6': {'model': 'iPhone XS Max', 'width': 547},
+        'iPhone11,4': {'model': 'iPhone XS Max (China mainland)', 'width': 452},        # 6,5"
+        'iPhone11,6': {'model': 'iPhone XS Max', 'width': 452},                         # 6,5"
         'iPhone11,8': {'model': 'iPhone XR', 'width': 435},                             # 6,1"
         'iPhone12,1': {'model': 'iPhone 11', 'width': 435},                             # 6,1"
         'iPhone12,3': {'model': 'iPhone 11 Pro', 'width': 435},                         # 5,8"
-        'iPhone12,5': {'model': 'iPhone 11 Pro Max', 'width': 547},
+        'iPhone12,5': {'model': 'iPhone 11 Pro Max', 'width': 452},                     # 6,5"
         'iPhone12,8': {'model': 'iPhone SE (2nd generation)', 'width': 529},            # 4,7"
         'iPhone13,1': {'model': 'iPhone 12 mini', 'width': 547},
         'iPhone13,2': {'model': 'iPhone 12', 'width': 435},                             # 6,1"
@@ -33,6 +33,10 @@ class iPhoneModels:
         'iPhone15,5': {'model': 'iPhone 15 Plus', 'width': 547},
         'iPhone16,1': {'model': 'iPhone 15 Pro', 'width': 435},                         # 6,1"
         'iPhone16,2': {'model': 'iPhone 15 Pro Max', 'width': 547},
+        'iPhone17,1': {'model': 'iPhone 16 Pro', 'width': 435},
+        'iPhone17,2': {'model': 'iPhone 16 Pro Max', 'width': 435},
+        'iPhone17,3': {'model': 'iPhone 16', 'width': 435},                             # 6,1"
+        'iPhone17,4': {'model': 'iPhone 16 Plus', 'width': 435},
         'iPhone14,1': {'model': 'Unknown iPhone', 'width': 435},                        # probably iPhone 13 (USB-C)
                                                                                         # A15 Chip by aaronp613
         'iPhone14,9': {'model': 'Unknown iPhone', 'width': 547},                        # probably iPhone 13 mini (USB-C)
