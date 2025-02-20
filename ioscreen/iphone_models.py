@@ -1,3 +1,4 @@
+# Source: https://raw.githubusercontent.com/blacktop/ipsw/master/pkg/info/data/ipsw_db.json
 class iPhoneModels:
     MODELS = {
         'iPhone1,1': {'model': 'iPhone', 'width': 547},
@@ -15,11 +16,15 @@ class iPhoneModels:
         'iPhone12,1': {'model': 'iPhone 11', 'width': 435},                             # 6,1"
         'iPhone12,3': {'model': 'iPhone 11 Pro', 'width': 435},                         # 5,8"
         'iPhone12,5': {'model': 'iPhone 11 Pro Max', 'width': 452},                     # 6,5"
+        'iPhone12,6': {'model': 'Unnamed iPhone with A13 Bionic', 'width': 452},
+        'iPhone12,7': {'model': 'Unnamed iPhone with A13 Bionic', 'width': 452},
         'iPhone12,8': {'model': 'iPhone SE (2nd generation)', 'width': 529},            # 4,7"
         'iPhone13,1': {'model': 'iPhone 12 mini', 'width': 547},
         'iPhone13,2': {'model': 'iPhone 12', 'width': 435},                             # 6,1"
         'iPhone13,3': {'model': 'iPhone 12 Pro', 'width': 435},                         # 6,1"
         'iPhone13,4': {'model': 'iPhone 12 Pro Max', 'width': 547},
+        'iPhone13,5': {'model': 'Unnamed iPhone with A14 Bionic', 'width': 547},
+        'iPhone14,1': {'model': 'Unnamed iPhone with A15 Bionic', 'width': 435},
         'iPhone14,2': {'model': 'iPhone 13 Pro', 'width': 435},                         # 6,1"
         'iPhone14,3': {'model': 'iPhone 13 Pro Max', 'width': 547},
         'iPhone14,4': {'model': 'iPhone 13 mini', 'width': 547},
@@ -27,6 +32,8 @@ class iPhoneModels:
         'iPhone14,6': {'model': 'iPhone SE (3rd generation)', 'width': 529},            # 4,7"
         'iPhone14,7': {'model': 'iPhone 14', 'width': 435},                             # 6,1"
         'iPhone14,8': {'model': 'iPhone 14 Plus', 'width': 547},
+        'iPhone14,9': {'model': 'Unnamed iPhone with A?', 'width': 547},
+        'iPhone15,1': {'model': 'Unnamed iPhone with A16 Bionic', 'width': 547},
         'iPhone15,2': {'model': 'iPhone 14 Pro', 'width': 435},                         # 6,1"
         'iPhone15,3': {'model': 'iPhone 14 Pro Max', 'width': 547},
         'iPhone15,4': {'model': 'iPhone 15', 'width': 435},                             # 6,1"
@@ -37,10 +44,7 @@ class iPhoneModels:
         'iPhone17,2': {'model': 'iPhone 16 Pro Max', 'width': 435},
         'iPhone17,3': {'model': 'iPhone 16', 'width': 435},                             # 6,1"
         'iPhone17,4': {'model': 'iPhone 16 Plus', 'width': 435},
-        'iPhone14,1': {'model': 'Unknown iPhone', 'width': 435},                        # probably iPhone 13 (USB-C)
-                                                                                        # A15 Chip by aaronp613
-        'iPhone14,9': {'model': 'Unknown iPhone', 'width': 547},                        # probably iPhone 13 mini (USB-C)
-                                                                                        # A15 Chip by aaronp613
+        'iPhone17,5': {'model': 'iPhone 16e', 'width': 435},                            # 6,1"
         'iPhone2,1': {'model': 'iPhone 3GS', 'width': 547},
         'iPhone3,1': {'model': 'iPhone 4 (GSM)', 'width': 547},
         'iPhone3,2': {'model': 'iPhone 4 (GSM, 2012)', 'width': 547},
