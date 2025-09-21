@@ -45,6 +45,10 @@ class iPhoneModels:
         'iPhone17,3': {'model': 'iPhone 16', 'width': 435},                             # 6,1"
         'iPhone17,4': {'model': 'iPhone 16 Plus', 'width': 435},
         'iPhone17,5': {'model': 'iPhone 16e', 'width': 435},                            # 6,1"
+        'iPhone18,1': {'model': 'iPhone 17 Pro', 'width': 435},
+        'iPhone18,2': {'model': 'iPhone 17 Pro Max', 'width': 435},
+        'iPhone18,3': {'model': 'iPhone 17', 'width': 435},
+        'iPhone18,4': {'model': 'iPhone Air', 'width': 452},                            # 6,5"
         'iPhone2,1': {'model': 'iPhone 3GS', 'width': 547},
         'iPhone3,1': {'model': 'iPhone 4 (GSM)', 'width': 547},
         'iPhone3,2': {'model': 'iPhone 4 (GSM, 2012)', 'width': 547},
