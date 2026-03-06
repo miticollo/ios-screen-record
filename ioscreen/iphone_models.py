@@ -49,6 +49,7 @@ class iPhoneModels:
         'iPhone18,2': {'model': 'iPhone 17 Pro Max', 'width': 435},
         'iPhone18,3': {'model': 'iPhone 17', 'width': 435},
         'iPhone18,4': {'model': 'iPhone Air', 'width': 452},                            # 6,5"
+        'iPhone18,5': {'model': 'iPhone 17e', 'width': 435},                            # 6,1"
         'iPhone2,1': {'model': 'iPhone 3GS', 'width': 547},
         'iPhone3,1': {'model': 'iPhone 4 (GSM)', 'width': 547},
         'iPhone3,2': {'model': 'iPhone 4 (GSM, 2012)', 'width': 547},
